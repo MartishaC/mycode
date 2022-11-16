@@ -8,7 +8,7 @@ def showInstructions():
     print('''
     RPG Game
     ========
-    Get to the Garden with a key and a potion to win!
+    Get to the Garden with a key, gold bar, token and a potion to win!
     Avoid the monsters!
 
     Commands:
@@ -23,11 +23,12 @@ def showStatus():
     print('You are in the ' + currentRoom)
     # print what the player is carrying
     print('Inventory:', inventory)
+    # print the number of moves
+    print(f'Moves: +{counter}')
     # check if there's an item in the room, if so print it
     if "item" in rooms[currentRoom]:
-      print('You see a ' + rooms[currentRoom]['item'])
+            print('You see a ' + rooms[currentRoom]['item'])
     print("---------------------------")
-
 
 # an inventory, which is initially empty
 inventory = []
@@ -38,17 +39,22 @@ rooms = {
             'Hall' : {
                   'south' : 'Kitchen',
                    'east'  : 'Dining Room',
-                   'item'  : 'key'
+                   'west': 'Bedroom',
+                   'item'  : 'key',
                 },
-
+            # ADDED Bedroom
+             'Bedroom' : {
+                   'east' : 'Hall',
+                  'item' : 'gold bar',
+                },
             'Kitchen' : {
                   'north' : 'Hall',
                   'item'  : 'monster',
                 },
              'Dining Room' : {
-                  'west' : 'Hall',
+                   'west' : 'Hall',
                    'south': 'Garden',
-                  'item' : 'potion'
+                   'item' :'[potion, token]',
                },
             'Garden' : {
                   'north' : 'Dining Room'
@@ -57,6 +63,7 @@ rooms = {
 
 # start the player in the Hall
 currentRoom = 'Hall'
+counter = 0
 
 showInstructions()
 
@@ -74,13 +81,14 @@ while True:
     # .lower() makes it lower case, .split() turns it to a list
     # therefore, "get golden key" becomes ["get", "golden key"]          
     move = move.lower().split(" ", 1)
-
+    
     #if they type 'go' first
     if move[0] == 'go':
         #check that they are allowed wherever they want to go
         if move[1] in rooms[currentRoom]:
             #set the current room to the new room
             currentRoom = rooms[currentRoom][move[1]]
+            counter += 1
         # if they aren't allowed to go that way:
         else:
             print('You can\'t go that way!')
@@ -108,7 +116,6 @@ while True:
         break
 
     ## Define how a player can win
-    if currentRoom == 'Garden' and 'key' in inventory and 'potion' in inventory:
-        print('You escaped the house with the ultra rare key and magic potion... YOU WIN!')
+    if currentRoom == 'Garden' and 'key' in inventory and 'potion' and 'token' and 'gold bar' in inventory:
+        print('You escaped the house with the ultra rare key, gold bar, token and magic potion... YOU WIN!')
         break
-
